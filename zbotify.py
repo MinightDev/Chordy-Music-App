@@ -287,9 +287,6 @@ class MusicPlayerApp:
             messagebox.showerror("Error", "Error fetching song details")
 
 
-
-
-
 if __name__ == "__main__":
     root = tk.Tk()
     app = MusicPlayerApp(root)
