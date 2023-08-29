@@ -106,7 +106,6 @@ class MusicPlayerApp:
         try:
             video_url = self.search_video(song_keyword)
 
-            # Download the audio in webm format
             ydl_opts = {
                 'format': 'bestaudio/best',
                 'outtmpl': os.path.join("mzika", "%(id)s.%(ext)s"),
@@ -124,10 +123,9 @@ class MusicPlayerApp:
 
             os.remove(webm_file)
 
-            # Play the downloaded song
             self.song_files.append(mp3_file)
-            self.current_song_index = len(self.song_files) - 1  # Set the index to the new song
-            self.play_selected_song()  # Play the newly downloaded song
+            self.current_song_index = len(self.song_files) - 1
+            self.play_selected_song()
 
             self.play_button.config(state=tk.NORMAL)
             self.pause_button.config(state=tk.NORMAL)
@@ -269,7 +267,7 @@ if __name__ == "__main__":
     style.configure("Custom.Horizontal.TProgressbar", foreground="green", background="#f56464")
 
     app.playback_counter = tk.StringVar()
-    playback_label = ttk.Label(root, textvariable=app.playback_counter, font=("Helvetica", 10))  # Adjust the font size as needed
+    playback_label = ttk.Label(root, textvariable=app.playback_counter, font=("Helvetica", 10))
     playback_label.pack()
 
     app.like_button = ttk.Button(root, text="❤")
