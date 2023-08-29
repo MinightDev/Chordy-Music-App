@@ -50,9 +50,12 @@ class MusicPlayerApp:
         self.quit_button = ttk.Button(root, text="Quit", command=self.quit_app)
         self.quit_button.pack(pady=10)
 
+        self.volume_label = ttk.Label(root, text="Volume:")
+        self.volume_label.pack(pady=5)
+
         self.volume_scale = ttk.Scale(root, from_=0, to=100, orient=tk.HORIZONTAL, command=self.adjust_volume)
-        self.volume_scale.set(50) # initialized the volume to 50
-        self.volume_scale.pack(pady=5)
+        self.volume_scale.set(60) # initialized the volume to 50
+        self.volume_scale.pack(pady=10)
 
         self.root.protocol("WM_DELETE_WINDOW", self.quit_app)
 
@@ -215,14 +218,13 @@ class MusicPlayerApp:
 
     def update_playback_progress(self):
         if pygame.mixer.music.get_busy():
-            self.playback_progress += 100
-            if self.playback_progress > self.current_song_length:
-                self.playback_progress = self.current_song_length
-            self.progress_bar['value'] = (self.playback_progress / self.current_song_length) * 100
-            self.playback_counter.set(self.format_time(self.current_song_length - self.playback_progress))
+            current_time = pygame.mixer.music.get_pos()  # Get the elapsed time in milliseconds
+            self.progress_bar['value'] = (current_time / self.current_song_length) * 100
+            self.playback_counter.set(self.format_time(self.current_song_length - current_time))
             self.root.after(100, self.update_playback_progress)
         else:
-            self.progress_bar['value'] = self.playback_progress
+            self.progress_bar['value'] = 0  # Reset the progress bar when playback is stopped
+
 
     def format_time(self, milliseconds):
         total_seconds = milliseconds // 1000
@@ -240,7 +242,16 @@ class MusicPlayerApp:
             for song_file in self.song_files:
                 if os.path.exists(song_file):
                     os.remove(song_file)
+        
+        # Remove all files from the "mzika" directory
+        mzika_directory = "mzika"
+        for filename in os.listdir(mzika_directory):
+            file_path = os.path.join(mzika_directory, filename)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+
         self.root.destroy()
+
 
 if __name__ == "__main__":
     root = tk.Tk()
