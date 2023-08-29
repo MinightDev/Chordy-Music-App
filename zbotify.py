@@ -18,10 +18,11 @@ class MusicPlayerApp:
         self.root.title("ZBotify v1.0")
         self.load_author()
 
+        pygame.mixer.init()
         style = ttk.Style()
         style.theme_use("clam")
         style.configure("TButton", foreground="#f56464", font=("Helvetica", 12))
-        self.label = ttk.Label(root, text="Enter a song keyword:", font=("Helvetica", 14, "bold"))
+        self.label = ttk.Label(root, text="Enter a song name:", font=("Helvetica", 14, "bold"))
         self.label.pack(pady=10)
 
         self.entry = ttk.Entry(root, font=("Helvetica", 12))
@@ -32,22 +33,22 @@ class MusicPlayerApp:
         self.entry.bind("<FocusIn>", self.remove_placeholder)
         self.entry.bind("<FocusOut>", self.restore_placeholder)
 
-        self.search_button = ttk.Button(root, text="Search and Play", command=self.search_and_play)
+        self.search_button = ttk.Button(root, text="Search and Play", cursor="hand2", command=self.search_and_play)
         self.search_button.pack(pady=5)
 
-        self.play_button = ttk.Button(root, text="Play", command=self.play_music, state=tk.DISABLED)
+        self.play_button = ttk.Button(root, text="Play", cursor="hand2", command=self.play_music, state=tk.DISABLED)
         self.play_button.pack(pady=5)
 
-        self.pause_button = ttk.Button(root, text="Stop", command=self.pause_music, state=tk.DISABLED)
+        self.pause_button = ttk.Button(root, text="Stop", cursor="hand2", command=self.pause_music, state=tk.DISABLED)
         self.pause_button.pack(pady=5)
 
-        self.prev_button = ttk.Button(root, text="Previous", command=self.play_previous, state=tk.DISABLED)
+        self.prev_button = ttk.Button(root, text="Previous", cursor="hand2", command=self.play_previous, state=tk.DISABLED)
         self.prev_button.pack(pady=5)
 
-        self.next_button = ttk.Button(root, text="Next", command=self.play_next, state=tk.DISABLED)
+        self.next_button = ttk.Button(root, text="Next", cursor="hand2", command=self.play_next, state=tk.DISABLED)
         self.next_button.pack(pady=5)
 
-        self.quit_button = ttk.Button(root, text="Quit", command=self.quit_app)
+        self.quit_button = ttk.Button(root, text="Loop", cursor="hand2", command=self.quit_app)
         self.quit_button.pack(pady=10)
 
         self.volume_label = ttk.Label(root, text="Volume:")
@@ -67,7 +68,7 @@ class MusicPlayerApp:
 
         self.label = ttk.Label(root, text=f"Please consider leaving a ⭐ to support the continuation of this project.\n", font=("Helvetica", 9, "bold"))
         self.label.pack(pady=5)
-        self.author_label = tk.Label(root, text=f"By {self.author}", font=("Helvetica", 10, "bold"), cursor="hand2")
+        self.author_label = tk.Label(root, text=f"Author: {self.author}", font=("Helvetica", 10, "bold"), cursor="hand2")
         self.author_label.pack(pady=5)
         self.author_label.bind("<Button-1>", self.open_author_website)
 
@@ -213,18 +214,22 @@ class MusicPlayerApp:
             self.playback_progress = 0
             self.playback_timer = self.root.after(100, self.update_playback_progress)
             self.playback_counter.set(self.format_time(self.current_song_length))
+
+            pygame.mixer.music.set_endevent(pygame.USEREVENT)
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
+
     def update_playback_progress(self):
         if pygame.mixer.music.get_busy():
-            current_time = pygame.mixer.music.get_pos()  # Get the elapsed time in milliseconds
+            current_time = pygame.mixer.music.get_pos()
             self.progress_bar['value'] = (current_time / self.current_song_length) * 100
             self.playback_counter.set(self.format_time(self.current_song_length - current_time))
             self.root.after(100, self.update_playback_progress)
         else:
-            self.progress_bar['value'] = 0  # Reset the progress bar when playback is stopped
-
+            self.progress_bar['value'] = 0 
+            
+            self.play_next()
 
     def format_time(self, milliseconds):
         total_seconds = milliseconds // 1000
@@ -251,6 +256,38 @@ class MusicPlayerApp:
                 os.remove(file_path)
 
         self.root.destroy()
+        
+    def get_youtube_metadata(self, video_url):
+        ydl_opts = {
+            'quiet': True,
+        }
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(video_url, download=False)
+            title = info.get('title', 'Working on it')
+            author = info.get('uploader', 'Minight')
+            return title, author
+    
+    def like_song(self):
+        try:
+            if self.current_song_index >= 0 and self.current_song_index < len(self.song_files):
+                current_song_file = self.song_files[self.current_song_index]
+                audio = MP3(current_song_file)
+                video_id = audio.get("TPE2", [None])[0]  # Replace with appropriate tag for video ID
+
+                if video_id:
+                    video_url = f"https://www.youtube.com/watch?v={video_id}"
+                    title, artist = self.get_youtube_metadata(video_url)
+                else:
+                    title = audio.get("TIT2", ["Unknown Title"])[0]
+                    artist = audio.get("TPE1", ["Unknown Artist"])[0]
+                
+                message = f"Song: {title}\nArtist: {artist}"
+                messagebox.showinfo("Current Song Details", message)
+        except Exception:
+            messagebox.showerror("Error", "Error fetching song details")
+
+
+
 
 
 if __name__ == "__main__":
@@ -267,5 +304,10 @@ if __name__ == "__main__":
     app.playback_counter = tk.StringVar()
     playback_label = ttk.Label(root, textvariable=app.playback_counter)
     playback_label.pack()
+
+    app.like_button = ttk.Button(root, text="❤", command=app.like_song)
+    app.like_button.pack(side=tk.LEFT, padx=10)
+    app.quit_button = ttk.Button(root, text="❌", command=app.quit_app)
+    app.quit_button.pack(side=tk.RIGHT, padx=10)
 
     root.mainloop()
