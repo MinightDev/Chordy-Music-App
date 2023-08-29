@@ -25,8 +25,7 @@ The app allows users to search for any songs, download them, and enjoy their fav
 
    ```bash
    ./run.sh
-
-
+   ```
 ## Usage
 
 - Launch the application using run.sh.
@@ -40,10 +39,5 @@ The app allows users to search for any songs, download them, and enjoy their fav
 
 Contributions are welcome! If you find any issues or want to improve the app, feel free to create a pull request. If you find this project helpful, don't forget to leave a ⭐️ to support its ongoing development!
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 **Note:** Please make sure you have the appropriate licenses for any audio content you download and use through the application.
-```
 
