@@ -251,7 +251,7 @@ if __name__ == "__main__":
     app.progress_bar.pack(pady=10)
 
     style = ttk.Style()
-    style.configure("Custom.Horizontal.TProgressbar", foreground="green")
+    style.configure("Custom.Horizontal.TProgressbar", foreground="green", background="#f56464")
 
     app.playback_counter = tk.StringVar()
     playback_label = ttk.Label(root, textvariable=app.playback_counter)
