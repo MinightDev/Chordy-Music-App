@@ -25,7 +25,7 @@ class MusicPlayerApp:
         self.label = ttk.Label(root, text="Enter a song name:", font=("Helvetica", 14, "bold"))
         self.label.pack(pady=10)
 
-        self.entry = ttk.Entry(root, font=("Helvetica", 12))
+        self.entry = ttk.Entry(root, font=("Helvetica", 14), width=20, foreground="gray")
         self.entry.pack(pady=5)
         self.placeholder_text = "Enter a song name.."
         self.entry.insert(0, self.placeholder_text)
@@ -55,7 +55,7 @@ class MusicPlayerApp:
         self.volume_label.pack(pady=5)
 
         self.volume_scale = ttk.Scale(root, from_=0, to=100, orient=tk.HORIZONTAL, command=self.adjust_volume)
-        self.volume_scale.set(60) # initialized the volume to 50
+        self.volume_scale.set(50)
         self.volume_scale.pack(pady=10)
 
         self.root.protocol("WM_DELETE_WINDOW", self.quit_app)
@@ -248,7 +248,6 @@ class MusicPlayerApp:
                 if os.path.exists(song_file):
                     os.remove(song_file)
         
-        # Remove all files from the "mzika" directory
         mzika_directory = "mzika"
         for filename in os.listdir(mzika_directory):
             file_path = os.path.join(mzika_directory, filename)
@@ -256,35 +255,6 @@ class MusicPlayerApp:
                 os.remove(file_path)
 
         self.root.destroy()
-        
-    def get_youtube_metadata(self, video_url):
-        ydl_opts = {
-            'quiet': True,
-        }
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(video_url, download=False)
-            title = info.get('title', 'Working on it')
-            author = info.get('uploader', 'Minight')
-            return title, author
-    
-    def like_song(self):
-        try:
-            if self.current_song_index >= 0 and self.current_song_index < len(self.song_files):
-                current_song_file = self.song_files[self.current_song_index]
-                audio = MP3(current_song_file)
-                video_id = audio.get("TPE2", [None])[0]  # Replace with appropriate tag for video ID
-
-                if video_id:
-                    video_url = f"https://www.youtube.com/watch?v={video_id}"
-                    title, artist = self.get_youtube_metadata(video_url)
-                else:
-                    title = audio.get("TIT2", ["Unknown Title"])[0]
-                    artist = audio.get("TPE1", ["Unknown Artist"])[0]
-                
-                message = f"Song: {title}\nArtist: {artist}"
-                messagebox.showinfo("Current Song Details", message)
-        except Exception:
-            messagebox.showerror("Error", "Error fetching song details")
 
 
 if __name__ == "__main__":
@@ -299,10 +269,10 @@ if __name__ == "__main__":
     style.configure("Custom.Horizontal.TProgressbar", foreground="green", background="#f56464")
 
     app.playback_counter = tk.StringVar()
-    playback_label = ttk.Label(root, textvariable=app.playback_counter)
+    playback_label = ttk.Label(root, textvariable=app.playback_counter, font=("Helvetica", 10))  # Adjust the font size as needed
     playback_label.pack()
 
-    app.like_button = ttk.Button(root, text="❤", command=app.like_song)
+    app.like_button = ttk.Button(root, text="❤")
     app.like_button.pack(side=tk.LEFT, padx=10)
     app.quit_button = ttk.Button(root, text="❌", command=app.quit_app)
     app.quit_button.pack(side=tk.RIGHT, padx=10)
