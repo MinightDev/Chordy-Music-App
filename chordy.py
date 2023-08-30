@@ -13,25 +13,28 @@ import webbrowser
 from pypresence import Presence
 import pypresence
 import time
+from ttkthemes import ThemedStyle
 
 
 class MusicPlayerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Chordy v1.0")
+        self.root.geometry("600x590")
         self.load_author()
         self.rpc = Presence("1146241395267481633")
         self.rpc.connect()
 
         pygame.mixer.init()
         style = ttk.Style()
-        style.theme_use("clam")
-        style.configure("TButton", foreground="#2A9D8F", font=("Helvetica", 12))
-
-        self.label = ttk.Label(root, text="Chordy Music", font=("Helvetica", 17, "bold"), foreground="#2A9D8F")
+        style = ThemedStyle(root)
+        style.set_theme("equilux")
+        style.configure("TButton", foreground="#2A9D8F", font=("Verdana", 12))
+        self.root.configure(bg=style.lookup("TFrame", "background"))
+        self.label = ttk.Label(root, text="Chordy Music", font=("Verdana", 17, "bold"), foreground="#2A9D8F")
         self.label.pack(pady=10)
 
-        self.entry = ttk.Entry(root, font=("Helvetica", 14), width=20, foreground="gray")
+        self.entry = ttk.Entry(root, font=("Verdana", 12), width=30, foreground="#cecece")
         self.entry.pack(pady=5)
         self.placeholder_text = "Enter a song name.."
         self.entry.insert(0, self.placeholder_text)
@@ -57,7 +60,7 @@ class MusicPlayerApp:
         self.quit_button = ttk.Button(root, text="Loop", cursor="hand2", command=self.quit_app)
         self.quit_button.pack(pady=10)
 
-        self.volume_label = ttk.Label(root, text="Volume:")
+        self.volume_label = ttk.Label(root, text="Volume:", font=("Verdana", 10, "bold"), foreground="#cecece")
         self.volume_label.pack(pady=5)
 
         self.volume_scale = ttk.Scale(root, from_=0, to=100, orient=tk.HORIZONTAL, command=self.adjust_volume)
@@ -72,8 +75,10 @@ class MusicPlayerApp:
         self.current_song_length = 0
         self.playback_progress = 0
 
-        self.author_label = tk.Label(root, text=f"Author: {self.author}", font=("Helvetica", 10, "bold"), cursor="hand2")
+        self.author_label = tk.Label(root, text=f"Author: {self.author}", font=("Verdana", 10, "bold"), cursor="hand2")
         self.author_label.pack(pady=5)
+        self.author_label.configure(bg=style.lookup("TFrame", "background"), fg="#cecece")
+
         self.author_label.bind("<Button-1>", self.open_author_website)
 
         if not os.path.exists("mzika"):
@@ -289,14 +294,15 @@ if __name__ == "__main__":
     app = MusicPlayerApp(root)
     root.iconbitmap("icon.ico")
 
+    style = ttk.Style()
+    style.theme_use("equilux")
+    style.configure("Custom.Horizontal.TProgressbar", foreground="#FF5733", background="#2A9D8F")
+
     app.progress_bar = ttk.Progressbar(root, orient=tk.HORIZONTAL, length=300, mode='determinate', style="Custom.Horizontal.TProgressbar")
     app.progress_bar.pack(pady=10)
 
-    style = ttk.Style()
-    style.configure("Custom.Horizontal.TProgressbar", foreground="green", background="#2A9D8F")
-
     app.playback_counter = tk.StringVar()
-    playback_label = ttk.Label(root, textvariable=app.playback_counter, font=("Helvetica", 10))
+    playback_label = ttk.Label(root, textvariable=app.playback_counter, font=("Verdana", 10))
     playback_label.pack()
 
     app.like_button = ttk.Button(root, text="❤")
