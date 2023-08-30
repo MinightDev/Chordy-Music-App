@@ -6,7 +6,7 @@ The app allows users to search for any songs, download them, and enjoy their fav
 ## Features
 
 - Search for songs by entering keywords.
-- Download songs from YouTube and convert them to MP3 format.
+- Download songs and convert them to MP3 format.
 - Play, pause, and stop music playback.
 - Adjust volume using a slider.
 - Navigate between previous and next songs.
@@ -16,7 +16,6 @@ The app allows users to search for any songs, download them, and enjoy their fav
 ## Requirements
 
 - Python 3.x
-- Required Libraries: pytube, pygame, yt_dlp, mutagen
 
 ## Installation
 
