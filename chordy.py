@@ -15,7 +15,6 @@ import pypresence
 import time
 from ttkthemes import ThemedStyle
 
-
 class MusicPlayerApp:
     def __init__(self, root):
         self.root = root
@@ -91,20 +90,34 @@ class MusicPlayerApp:
 
     def update_discord_rich_presence(self):
         if self.current_song_index >= 0:
-            song_name = os.path.basename(self.song_files[self.current_song_index])
-            self.rpc.update(
-                details="Listening to music",
-                state=f"Playing: {song_name}",
-                large_image="qfzajzm",
-                small_image="green-circle-icon-28",
-                large_text="Chordy",
-                small_text="Download me now!!!",
-                start=int(time.time()) - self.playback_progress // 1000,
-                end=int(time.time()) + (self.current_song_length - self.playback_progress) // 1000,
-                buttons=[
-                    {"label": "Download", "url": "https://github.com/MinightDev/Chordy-Music-App"}
-                ]
-            )
+            song_file_name = os.path.basename(self.song_files[self.current_song_index])
+            
+            # Remove the ".mp3" extension
+            song_name, _ = os.path.splitext(song_file_name)
+            
+            # Find the last occurrence of "-" to split song name and artist name
+            last_dash_index = song_name.rfind('-')
+            
+            if last_dash_index != -1:
+                artist_name = song_name[last_dash_index + 1:]
+                song_name = song_name[:last_dash_index]
+                
+                # Replace underscores with spaces in the song name
+                song_name = song_name.replace('_', ' ')
+                
+                self.rpc.update(
+                    details=f"Listening to {artist_name}",
+                    state=f"Playing: {song_name}",
+                    large_image="xudreao",
+                    small_image="5ob1lrr",
+                    large_text="Chordy",
+                    small_text="Download me now!!!",
+                    start=int(time.time()) - self.playback_progress // 1000,
+                    end=int(time.time()) + (self.current_song_length - self.playback_progress) // 1000,
+                    buttons=[
+                        {"label": "Download", "url": "https://github.com/MinightDev/Chordy-Music-App"}
+                    ]
+                )
 
     def open_author_website(self, event):
         webbrowser.open("https://github.com/MinightDev/Chordy-Music-App")
@@ -138,10 +151,13 @@ class MusicPlayerApp:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(video_url, download=True)
                 song_id = info['id']
+                song_name = info['title']
+                
+                artist_name = info.get('uploader', 'Unknown Artist')
+
                 webm_file = os.path.join("mzika", f"{song_id}.webm")
 
-            # Convert webm to mp3 using ffmpeg
-            mp3_file = os.path.join("mzika", f"{song_id}.mp3")
+            mp3_file = os.path.join("mzika", f"{song_name.replace(' ', '_')}-{artist_name}.mp3")
             ffmpeg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin", "ffmpeg")
             convert_command = [ffmpeg_path, "-i", webm_file, "-b:a", "320k", mp3_file]
             subprocess.run(convert_command)
@@ -165,7 +181,6 @@ class MusicPlayerApp:
             messagebox.showerror("Error", "No matching music found.")
         except Exception as e:
             messagebox.showerror("Error", str(e))
-
 
     def get_audio_length(self, audio_file):
         try:
