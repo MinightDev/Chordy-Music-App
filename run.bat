@@ -6,7 +6,7 @@ setlocal
 
 pip install pytube pygame yt-dlp mutagen
 
-start /B pythonw zbotify.py
+start /B pythonw chordy.py
 
 endlocal
 exit
