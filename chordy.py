@@ -97,12 +97,12 @@ class MusicPlayerApp:
                 start=int(time.time()) - self.playback_progress // 1000,
                 end=int(time.time()) + (self.current_song_length - self.playback_progress) // 1000,
                 buttons=[
-                    {"label": "Download", "url": "https://github.com/MinightDev/ZBotify-Music-Streaming-App"}
+                    {"label": "Download", "url": "https://github.com/MinightDev/Chordy-Music-App"}
                 ]
             )
 
     def open_author_website(self, event):
-        webbrowser.open("https://github.com/MinightDev/ZBotify-Music-Streaming-App")
+        webbrowser.open("https://github.com/MinightDev/Chordy-Music-App")
 
     def remove_placeholder(self, event):
         if self.entry.get() == self.placeholder_text:
