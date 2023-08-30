@@ -10,19 +10,25 @@ from datetime import timedelta
 from mutagen.mp3 import MP3
 import subprocess
 import webbrowser
+from pypresence import Presence
+import pypresence
+import time
 
 
 class MusicPlayerApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("ZBotify v1.0")
+        self.root.title("Chordy v1.0")
         self.load_author()
+        self.rpc = Presence("1146241395267481633")
+        self.rpc.connect()
 
         pygame.mixer.init()
         style = ttk.Style()
         style.theme_use("clam")
-        style.configure("TButton", foreground="#f56464", font=("Helvetica", 12))
-        self.label = ttk.Label(root, text="Enter a song name:", font=("Helvetica", 14, "bold"))
+        style.configure("TButton", foreground="#2A9D8F", font=("Helvetica", 12))
+
+        self.label = ttk.Label(root, text="Chordy Music", font=("Helvetica", 17, "bold"), foreground="#2A9D8F")
         self.label.pack(pady=10)
 
         self.entry = ttk.Entry(root, font=("Helvetica", 14), width=20, foreground="gray")
@@ -66,8 +72,6 @@ class MusicPlayerApp:
         self.current_song_length = 0
         self.playback_progress = 0
 
-        self.label = ttk.Label(root, text=f"Please consider leaving a ⭐ to support the continuation of this project.\n", font=("Helvetica", 9, "bold"))
-        self.label.pack(pady=5)
         self.author_label = tk.Label(root, text=f"Author: {self.author}", font=("Helvetica", 10, "bold"), cursor="hand2")
         self.author_label.pack(pady=5)
         self.author_label.bind("<Button-1>", self.open_author_website)
@@ -80,6 +84,22 @@ class MusicPlayerApp:
         self.playback_timer = self.root.after(100, self.update_playback_progress)
 
 
+    def update_discord_rich_presence(self):
+        if self.current_song_index >= 0:
+            song_name = os.path.basename(self.song_files[self.current_song_index])
+            self.rpc.update(
+                details="Listening to music",
+                state=f"Playing: {song_name}",
+                large_image="qfzajzm",
+                small_image="green-circle-icon-28",
+                large_text="Chordy",
+                small_text="Download me now!!!",
+                start=int(time.time()) - self.playback_progress // 1000,
+                end=int(time.time()) + (self.current_song_length - self.playback_progress) // 1000,
+                buttons=[
+                    {"label": "Download", "url": "https://github.com/MinightDev/ZBotify-Music-Streaming-App"}
+                ]
+            )
 
     def open_author_website(self, event):
         webbrowser.open("https://github.com/MinightDev/ZBotify-Music-Streaming-App")
@@ -171,10 +191,13 @@ class MusicPlayerApp:
             else:
                 self.play_selected_song()
 
+            self.update_discord_rich_presence()
+
             self.play_button.config(state=tk.DISABLED)
             self.pause_button.config(state=tk.NORMAL)
             self.prev_button.config(state=tk.NORMAL)
             self.next_button.config(state=tk.NORMAL)
+
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
@@ -214,6 +237,14 @@ class MusicPlayerApp:
             self.playback_counter.set(self.format_time(self.current_song_length))
 
             pygame.mixer.music.set_endevent(pygame.USEREVENT)
+
+            self.update_discord_rich_presence()
+
+            self.play_button.config(state=tk.DISABLED)
+            self.pause_button.config(state=tk.NORMAL)
+            self.prev_button.config(state=tk.NORMAL)
+            self.next_button.config(state=tk.NORMAL)
+
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
@@ -245,15 +276,13 @@ class MusicPlayerApp:
             for song_file in self.song_files:
                 if os.path.exists(song_file):
                     os.remove(song_file)
-        
+
         mzika_directory = "mzika"
         for filename in os.listdir(mzika_directory):
             file_path = os.path.join(mzika_directory, filename)
             if os.path.isfile(file_path):
                 os.remove(file_path)
-
         self.root.destroy()
-
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -264,7 +293,7 @@ if __name__ == "__main__":
     app.progress_bar.pack(pady=10)
 
     style = ttk.Style()
-    style.configure("Custom.Horizontal.TProgressbar", foreground="green", background="#f56464")
+    style.configure("Custom.Horizontal.TProgressbar", foreground="green", background="#2A9D8F")
 
     app.playback_counter = tk.StringVar()
     playback_label = ttk.Label(root, textvariable=app.playback_counter, font=("Helvetica", 10))
