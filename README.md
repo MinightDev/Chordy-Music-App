@@ -1,6 +1,6 @@
-# ZBotify v1.0 Music Streamer
+# Chordy v1.0 Music Streamer
 
-ZBotify v1.0 is a simple music streaming application built using Python's Tkinter GUI framework and the Pygame library for audio playback. 
+Chordy v1.0 is a simple music streaming application built using Python's Tkinter GUI framework and the Pygame library for audio playback. 
 The app allows users to search for any songs, download them, and enjoy their favorite music seamlessly.
 
 ## Features
