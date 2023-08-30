@@ -4,7 +4,7 @@
 
 setlocal
 
-pip install pytube pygame yt-dlp mutagen
+pip install pytube pygame yt-dlp pypresence mutagen
 
 start /B pythonw chordy.py
 
