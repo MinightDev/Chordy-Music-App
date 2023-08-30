@@ -14,6 +14,8 @@ from pypresence import Presence
 import pypresence
 import time
 from ttkthemes import ThemedStyle
+import re
+
 
 class MusicPlayerApp:
     def __init__(self, root):
@@ -152,12 +154,14 @@ class MusicPlayerApp:
                 info = ydl.extract_info(video_url, download=True)
                 song_id = info['id']
                 song_name = info['title']
-                
+
                 artist_name = info.get('uploader', 'Unknown Artist')
 
                 webm_file = os.path.join("mzika", f"{song_id}.webm")
 
-            mp3_file = os.path.join("mzika", f"{song_name.replace(' ', '_')}-{artist_name}.mp3")
+            song_name_cleaned = re.sub(r'[^\w\s-]', '', song_name)
+
+            mp3_file = os.path.join("mzika", f"{song_name_cleaned.replace(' ', '_')}-{artist_name}.mp3")
             ffmpeg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin", "ffmpeg")
             convert_command = [ffmpeg_path, "-i", webm_file, "-b:a", "320k", mp3_file]
             subprocess.run(convert_command)
@@ -172,7 +176,7 @@ class MusicPlayerApp:
             self.pause_button.config(state=tk.NORMAL)
             self.prev_button.config(state=tk.NORMAL)
             self.next_button.config(state=tk.NORMAL)
-            
+
             self.playback_progress = 0
             self.current_song_length = self.get_audio_length(mp3_file)
             self.playback_timer = self.root.after(100, self.update_playback_progress)
