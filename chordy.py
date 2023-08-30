@@ -93,18 +93,14 @@ class MusicPlayerApp:
     def update_discord_rich_presence(self):
         if self.current_song_index >= 0:
             song_file_name = os.path.basename(self.song_files[self.current_song_index])
-            
-            # Remove the ".mp3" extension
             song_name, _ = os.path.splitext(song_file_name)
             
-            # Find the last occurrence of "-" to split song name and artist name
             last_dash_index = song_name.rfind('-')
             
             if last_dash_index != -1:
                 artist_name = song_name[last_dash_index + 1:]
                 song_name = song_name[:last_dash_index]
                 
-                # Replace underscores with spaces in the song name
                 song_name = song_name.replace('_', ' ')
                 
                 self.rpc.update(
