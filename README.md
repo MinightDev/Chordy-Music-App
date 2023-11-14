@@ -1,9 +1,7 @@
 # Chordy v1.0 Music Streamer
 
 <p align="center">
-  <div style="border-radius: 20px; overflow: hidden; display: inline-block;">
-    <img src="https://media.discordapp.net/attachments/1058897998156922911/1146464180363350036/xudReaO.png?ex=655e1bf8&is=654ba6f8&hm=0c5c7b2ea62cc35396603059f7fc122e7f3fd9cb8689bac87a62557605989a68&=&width=676&height=676" alt="Chordy logo" width="200">
-  </div>
+  <img style="border-radius: 20px;" src="https://media.discordapp.net/attachments/1058897998156922911/1146464180363350036/xudReaO.png?ex=655e1bf8&is=654ba6f8&hm=0c5c7b2ea62cc35396603059f7fc122e7f3fd9cb8689bac87a62557605989a68&=&width=676&height=676" alt="Chordy logo" width="200">
 </p>
 
 
