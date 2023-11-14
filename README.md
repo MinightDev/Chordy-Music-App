@@ -9,7 +9,7 @@ Chordy v1.0 is a user-friendly music streaming application crafted with Python's
 ## Discord RPC
 
 <p align="center">
-  <img src="https://cdn.discordapp.com/attachments/551050418541821992/1174090698992128121/yyo.png?ex=6566542c&is=6553df2c&hm=07184cc57db89ab5344ed8080ad73b9416b667e13f43949fe8408b685b26db88" alt="Chordy Discord RPC" width="500">
+  <img src="https://cdn.discordapp.com/attachments/551050418541821992/1174090698992128121/yyo.png?ex=6566542c&is=6553df2c&hm=07184cc57db89ab5344ed8080ad73b9416b667e13f43949fe8408b685b26db88" alt="Chordy Discord RPC" width="200">
 </p>
 
 ## Features
