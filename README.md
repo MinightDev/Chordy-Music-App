@@ -1,5 +1,9 @@
 # Chordy v1.0 Music Streamer
 
+  <img style="border-radius: 10px;" src="https://media.discordapp.net/attachments/1058897998156922911/1146464180363350036/xudReaO.png?ex=655e1bf8&is=654ba6f8&hm=0c5c7b2ea62cc35396603059f7fc122e7f3fd9cb8689bac87a62557605989a68&=&width=676&height=676<p align="center">
+" alt="Chordy logo" width="200">
+</p>
+
 Chordy v1.0 is a simple music streaming application built using Python's Tkinter GUI framework and the Pygame library for audio playback. 
 The app allows users to search for any songs, download them, and enjoy their favorite music seamlessly.
 
