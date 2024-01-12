@@ -58,7 +58,7 @@ class MusicPlayerApp:
         self.next_button = ttk.Button(root, text="Next", cursor="hand2", command=self.play_next, state=tk.DISABLED)
         self.next_button.pack(pady=5)
 
-        self.quit_button = ttk.Button(root, text="Loop", cursor="hand2", command=self.quit_app)
+        self.quit_button = ttk.Button(root, text="Loop", cursor="hand2", command=self.toggle_loop)
         self.quit_button.pack(pady=10)
 
         self.volume_label = ttk.Label(root, text="Volume:", font=("Verdana", 10, "bold"), foreground="#cecece")
@@ -88,21 +88,21 @@ class MusicPlayerApp:
         pygame.mixer.init()
 
         self.playback_timer = self.root.after(100, self.update_playback_progress)
-
+        self.loop_enabled = False
 
     def update_discord_rich_presence(self):
         if self.current_song_index >= 0:
             song_file_name = os.path.basename(self.song_files[self.current_song_index])
             song_name, _ = os.path.splitext(song_file_name)
-            
+
             last_dash_index = song_name.rfind('-')
-            
+
             if last_dash_index != -1:
                 artist_name = song_name[last_dash_index + 1:]
                 song_name = song_name[:last_dash_index]
-                
+
                 song_name = song_name.replace('_', ' ')
-                
+
                 self.rpc.update(
                     details=f"Listening to {artist_name}",
                     state=f"Playing: {song_name}",
@@ -233,6 +233,11 @@ class MusicPlayerApp:
         try:
             if self.current_song_index >= 0:
                 self.play_song(self.song_files[self.current_song_index])
+
+                # If loop is enabled, set an event to play the next song when the current one finishes
+                if self.loop_enabled:
+                    pygame.mixer.music.set_endevent(pygame.USEREVENT)
+
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
@@ -268,17 +273,18 @@ class MusicPlayerApp:
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
-
     def update_playback_progress(self):
         if pygame.mixer.music.get_busy():
             current_time = pygame.mixer.music.get_pos()
             self.progress_bar['value'] = (current_time / self.current_song_length) * 100
             self.playback_counter.set(self.format_time(self.current_song_length - current_time))
             self.root.after(100, self.update_playback_progress)
+        elif self.loop_enabled:
+            # If loop is enabled, play the current song again
+            self.play_selected_song()
         else:
-            self.progress_bar['value'] = 0 
-            
-            self.play_next()
+            self.progress_bar['value'] = 0
+
 
     def format_time(self, milliseconds):
         total_seconds = milliseconds // 1000
@@ -304,6 +310,13 @@ class MusicPlayerApp:
                 os.remove(file_path)
         self.root.destroy()
 
+    def toggle_loop(self):
+        # Toggle the loop state and update the button text
+        self.loop_enabled = not self.loop_enabled
+        loop_text = "Unloop" if self.loop_enabled else "Loop"
+        self.quit_button.config(text=loop_text)
+
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = MusicPlayerApp(root)
@@ -313,16 +326,17 @@ if __name__ == "__main__":
     style.theme_use("equilux")
     style.configure("Custom.Horizontal.TProgressbar", foreground="#FF5733", background="#2A9D8F")
 
-    app.progress_bar = ttk.Progressbar(root, orient=tk.HORIZONTAL, length=300, mode='determinate', style="Custom.Horizontal.TProgressbar")
+    app.progress_bar = ttk.Progressbar(root, orient=tk.HORIZONTAL, length=300, mode='determinate',
+                                      style="Custom.Horizontal.TProgressbar")
     app.progress_bar.pack(pady=10)
 
     app.playback_counter = tk.StringVar()
     playback_label = ttk.Label(root, textvariable=app.playback_counter, font=("Verdana", 10))
     playback_label.pack()
 
-    app.like_button = ttk.Button(root, text="❤")
+    app.like_button = ttk.Button(root, text="❤", command=lambda: webbrowser.open("https://github.com/MinightDev/Chordy-Music-App"))
     app.like_button.pack(side=tk.LEFT, padx=10)
-    app.quit_button = ttk.Button(root, text="❌", command=app.quit_app)
+    app.quit_button = ttk.Button(root, text="Loop", cursor="hand2", command=app.toggle_loop)
     app.quit_button.pack(side=tk.RIGHT, padx=10)
 
     root.mainloop()
