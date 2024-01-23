@@ -23,8 +23,11 @@ class MusicPlayerApp:
         self.root.title("Chordy v1.0")
         self.root.geometry("600x590")
         self.load_author()
-        self.rpc = Presence("1146241395267481633")
-        self.rpc.connect()
+        try:
+            self.rpc = Presence("1146241395267481633")
+            self.rpc.connect()
+        except pypresence.exceptions.DiscordNotFound:
+            print("Discord not found. Discord integration will be disabled.")
 
         pygame.mixer.init()
         style = ttk.Style()
