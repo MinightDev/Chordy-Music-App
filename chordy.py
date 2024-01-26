@@ -22,6 +22,8 @@ class MusicPlayerApp:
         self.root = root
         self.root.title("Chordy v1.0")
         self.root.geometry("600x590")
+        # disclaimer msgbox when chordy starts
+        messagebox.showinfo("License Disclaimer", "Ensure that you have the proper licenses for any audio content downloaded and used through the application.")
         self.load_author()
         try:
             self.rpc = Presence("1146241395267481633")
