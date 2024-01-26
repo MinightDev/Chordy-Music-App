@@ -1,7 +1,7 @@
 # Chordy v1.0 Music Streamer
 
 <p align="center">
-  <img style="border-radius: 40px;" src="https://media.discordapp.net/attachments/1058897998156922911/1146464180363350036/xudReaO.png?ex=655e1bf8&is=654ba6f8&hm=0c5c7b2ea62cc35396603059f7fc122e7f3fd9cb8689bac87a62557605989a68&=&width=676&height=676" alt="Chordy logo" width="200">
+  <img style="border-radius: 50%;" src="https://media.discordapp.net/attachments/1058897998156922911/1146464180363350036/xudReaO.png?ex=655e1bf8&is=654ba6f8&hm=0c5c7b2ea62cc35396603059f7fc122e7f3fd9cb8689bac87a62557605989a68&=&width=676&height=676" alt="Chordy logo" width="200">
 </p>
 
 
@@ -10,8 +10,15 @@ Chordy v1.0 is a user-friendly music streaming application crafted with Python's
 ## Discord RPC
 
 <p align="center">
-  <img src="https://cdn.discordapp.com/attachments/551050418541821992/1174090698992128121/yyo.png?ex=6566542c&is=6553df2c&hm=07184cc57db89ab5344ed8080ad73b9416b667e13f43949fe8408b685b26db88" alt="Chordy Discord RPC" width="260">
+  <img src="https://cdn.discordapp.com/attachments/551050418541821992/1200521180336107681/discordrpc.png?ex=65c67b79&is=65b40679&hm=42d251a9040e5eef897898fb59d9156a899eae653208eb400786d4851ddcc3b8&" alt="Chordy Discord RPC" width="260">
 </p>
+
+## Chordy UI
+
+<p align="center">
+  <img src="https://cdn.discordapp.com/attachments/551050418541821992/1200521470682611802/459844.png?ex=65c67bbf&is=65b406bf&hm=4d2124b35b52a3123d39831910de0299f67b559bd5f532262f3b72e2c996259f&" alt="Chordy Discord RPC" width="260">
+</p>
+
 
 ## Features
 
