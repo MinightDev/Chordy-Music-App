@@ -1,4 +1,5 @@
 import os
+import ffmpeg
 import tkinter as tk
 from tkinter import ttk, messagebox
 from pytube import YouTube
@@ -10,6 +11,7 @@ from datetime import timedelta
 from mutagen.mp3 import MP3
 import subprocess
 import webbrowser
+import subprocess
 from pypresence import Presence
 import pypresence
 import time
@@ -22,8 +24,6 @@ class MusicPlayerApp:
         self.root = root
         self.root.title("Chordy v1.0")
         self.root.geometry("600x590")
-        # disclaimer msgbox when chordy starts
-        messagebox.showinfo("License Disclaimer", "Ensure that you have the proper licenses for any audio content downloaded and used through the application.")
         self.load_author()
         try:
             self.rpc = Presence("1146241395267481633")
@@ -140,7 +140,7 @@ class MusicPlayerApp:
                 config = json.load(config_file)
                 self.author = config.get("author", "Minight")
         except Exception:
-            self.author = "Minight"
+            self.author = "Ayoub (MinightDev)"
 
     def search_and_play(self):
         song_keyword = self.entry.get()
@@ -163,9 +163,8 @@ class MusicPlayerApp:
             song_name_cleaned = re.sub(r'[^\w\s-]', '', song_name)
 
             mp3_file = os.path.join("mzika", f"{song_name_cleaned.replace(' ', '_')}-{artist_name}.mp3")
-            ffmpeg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin", "ffmpeg")
-            convert_command = [ffmpeg_path, "-i", webm_file, "-b:a", "320k", mp3_file]
-            subprocess.run(convert_command)
+
+            subprocess.run(['ffmpeg', '-i', webm_file, '-vn', '-b:a', '320k', mp3_file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
             os.remove(webm_file)
 

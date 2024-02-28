@@ -33,6 +33,7 @@ Chordy v1.0 is a user-friendly music streaming application crafted with Python's
 ## Requirements
 
 - **Python 3.x**
+- **ffmpeg**: Ensure that ffmpeg is installed on your system and accessible via the command line.
 
 ## Installation
 
